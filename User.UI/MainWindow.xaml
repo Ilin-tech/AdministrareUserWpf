@@ -1,0 +1,44 @@
+﻿<Window x:Class="User.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:viewmodel="clr-namespace:User.ViewModel;assembly=User.ViewModel"
+       
+        Title="Main Window" Height="585" Width="1022">
+    <Window.Background>
+        <ImageBrush ImageSource="/i-m-zion-jGpgpFsCECc-unsplash.jpg"/>
+    </Window.Background>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox ItemsSource="{Binding Users}" 
+                 SelectedItem="{Binding SelectedUser}"
+                 DisplayMemberPath="UsernAME" Opacity="0.3" FontFamily="Segoe Script" FontStyle="Italic"
+        />
+
+        <StackPanel Grid.Column="1" Margin="10,0,0,125">
+            <TextBox Text="{Binding SelectedUser.UsernAME, UpdateSourceTrigger=PropertyChanged}" Cursor="IBeam" BorderBrush="#FF040404"/>
+            <TextBox Text="{Binding SelectedUser.uSERpASS, UpdateSourceTrigger=PropertyChanged}" Cursor="IBeam" AutomationProperties.HelpText="Write" BorderBrush="Black"/>
+            <CheckBox IsChecked="{Binding SelectedUser.IsAdmin}" Content="Is Admin" Foreground="#FFFBFBFB" FontStyle="Italic" FontSize="10" FontFamily="Sitka Text"/>
+            <Button Content="Save" Command="{Binding SaveCommand}" Margin="0,10,0,0" BorderBrush="Black" Cursor="Hand">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FFC71414" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button Content="Add New User" Command="{Binding AddCommand}" Margin="0,10,0,0" BorderBrush="Black" Cursor="Hand">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FFFF0909" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+        <Label Grid.Column="1" Content="@Administrare User.WPF" HorizontalAlignment="Left" Margin="375,496,0,0" VerticalAlignment="Top" Width="104" Foreground="#FFC5C5C5" FontFamily="Gabriola"/>
+    </Grid>
+</Window>
