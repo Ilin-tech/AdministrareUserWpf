@@ -3,63 +3,63 @@ using System.Runtime.CompilerServices;
 
 namespace User.Model
 {
-    // Clasa Users reprezintă un model de date pentru utilizatori și implementează INotifyPropertyChanged pentru a notifica schimbările de proprietăți
+    // The Users class represents a data model for users and implements INotifyPropertyChanged to notify property changes
     public class Users : INotifyPropertyChanged
     {
-        // Câmpuri private pentru stocarea valorilor proprietăților
+        // Private fields for storing property values
         private int _id;
         private string _username;
         private string _password;
         private bool _isAdmin;
 
-        // Proprietatea ID cu notificare la schimbare
+        // ID property with change notification
         public int ID
         {
             get => _id;
             set
             {
                 _id = value;
-                OnPropertyChanged(); // Notifică schimbarea valorii
+                OnPropertyChanged(); // Notifies value change
             }
         }
 
-        // Proprietatea UsernAME cu notificare la schimbare
+        // UsernAME property with change notification
         public string UsernAME
         {
             get => _username;
             set
             {
                 _username = value;
-                OnPropertyChanged(); // Notifică schimbarea valorii
+                OnPropertyChanged(); // Notifies value change
             }
         }
 
-        // Proprietatea uSERpASS cu notificare la schimbare
+        // uSERpASS property with change notification
         public string uSERpASS
         {
             get => _password;
             set
             {
                 _password = value;
-                OnPropertyChanged(); // Notifică schimbarea valorii
+                OnPropertyChanged(); // Notifies value change
             }
         }
 
-        // Proprietatea IsAdmin cu notificare la schimbare
+        // IsAdmin property with change notification
         public bool IsAdmin
         {
             get => _isAdmin;
             set
             {
                 _isAdmin = value;
-                OnPropertyChanged(); // Notifică schimbarea valorii
+                OnPropertyChanged(); // Notifies value change
             }
         }
 
-        // Eveniment pentru notificarea schimbărilor de proprietăți
+        // Event to notify property changes
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Metodă pentru a declanșa evenimentul PropertyChanged când o proprietate își schimbă valoarea
+        // Method to trigger the PropertyChanged event when a property's value changes
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
