@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using User.Services; // Pentru DataService
+using User.Services; // For DataService
 
 namespace User.ViewModel
 {
-    // Clasa LoginViewModel implementează logica de autentificare și notificare a schimbărilor în MVVM
+    // The LoginViewModel class implements login logic and property change notification in MVVM
     public class LoginViewModel : INotifyPropertyChanged
     {
         private string _username;
@@ -14,96 +14,96 @@ namespace User.ViewModel
         private string _errorMessage;
         private readonly DataService _dataService;
 
-        // Proprietatea pentru numele de utilizator
+        // Property for the username
         public string Username
         {
             get => _username;
             set { _username = value; OnPropertyChanged(); }
         }
 
-        // Proprietatea pentru parola
+        // Property for the password
         public string Password
         {
             get => _password;
             set { _password = value; OnPropertyChanged(); }
         }
 
-        // Proprietatea pentru afișarea mesajului de eroare
+        // Property for displaying the error message
         public string ErrorMessage
         {
             get => _errorMessage;
             set { _errorMessage = value; OnPropertyChanged(); }
         }
 
-        // Comanda pentru acțiunea de autentificare
+        // Command for the login action
         public ICommand LoginCommand { get; }
 
-        // Eveniment care semnalează autentificarea reușită
+        // Event triggered when login is successful
         public event EventHandler LoginSuccessful;
 
-        // Constructor pentru inițializarea serviciului de date și a comenzii de login
+        // Constructor to initialize the data service and login command
         public LoginViewModel()
         {
             _dataService = new DataService();
-            // Inițializare comandă de login cu apel la metoda Login
+            // Initialize login command with a call to the Login method
             LoginCommand = new RelayCommand(() => Login());
         }
 
-        // Metoda de autentificare
+        // Login method
         private void Login()
         {
-            // Validează utilizatorul utilizând serviciul de date
+            // Validate the user using the data service
             var user = _dataService.ValidateUser(Username, Password);
 
-            // Dacă utilizatorul este valid, declanșează evenimentul de succes
+            // If the user is valid, trigger the success event
             if (user != null)
             {
                 LoginSuccessful?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                // Afișează mesaj de eroare dacă autentificarea a eșuat
+                // Display an error message if authentication fails
                 ErrorMessage = "Login failed. Please try again.";
             }
         }
 
-        // Eveniment pentru notificarea schimbării unei proprietăți
+        // Event for notifying property changes
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Metodă pentru a declanșa evenimentul PropertyChanged
+        // Method to trigger the PropertyChanged event
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
-    // Clasa RelayCommand pentru implementarea interfeței ICommand
+    // The RelayCommand class implements the ICommand interface
     public class RelayCommand : ICommand
     {
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
 
-        // Constructorul primește acțiunea de execuție și funcția de verificare
+        // Constructor receives the execution action and the check function
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        // Eveniment care gestionează schimbările în starea comenzii
+        // Event that handles changes in the command's state
         public event EventHandler CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        // Verifică dacă comanda poate fi executată
+        // Checks whether the command can be executed
         public bool CanExecute(object parameter)
         {
             return _canExecute == null || _canExecute();
         }
 
-        // Execută acțiunea asociată comenzii
+        // Executes the action associated with the command
         public void Execute(object parameter)
         {
             _execute();
