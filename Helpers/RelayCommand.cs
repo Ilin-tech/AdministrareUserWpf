@@ -3,40 +3,40 @@ using System.Windows.Input;
 
 namespace Helpers
 {
-    // Clasa RelayCommand implementează interfața ICommand pentru a oferi suport pentru comenzi în MVVM
+    // The RelayCommand class implements the ICommand interface to provide support for commands in MVVM
     public class RelayCommand : ICommand
     {
-        // Delegat pentru acțiunea de executare a comenzii
+        // Delegate for the command execution action
         private readonly Action _execute;
 
-        // Delegat pentru verificarea condiției de executare a comenzii
+        // Delegate for checking the condition for command execution
         private readonly Func<bool> _canExecute;
 
-        // Constructorul primește două delegate: unul pentru execuție și unul pentru validare
+        // The constructor receives two delegates: one for execution and one for validation
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
-            // Verifică dacă acțiunea de execuție nu este nulă
+            // Checks if the execution action is not null
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        // Eveniment pentru notificarea schimbării stării de execuție a comenzii
+        // Event for notifying when the command's execution status changes
         public event EventHandler CanExecuteChanged;
 
-        // Metodă care determină dacă comanda poate fi executată
+        // Method that determines whether the command can be executed
         public bool CanExecute(object parameter)
         {
-            // Dacă delegatul _canExecute este nul, comanda poate fi executată
+            // If the _canExecute delegate is null, the command can be executed
             return _canExecute == null || _canExecute();
         }
 
-        // Metodă care execută acțiunea asociată comenzii
+        // Method that executes the action associated with the command
         public void Execute(object parameter)
         {
             _execute();
         }
 
-        // Metodă pentru a declanșa evenimentul CanExecuteChanged, indicând că starea comenzii s-a schimbat
+        // Method to trigger the CanExecuteChanged event, indicating that the command state has changed
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
