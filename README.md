@@ -1,0 +1,1 @@
+--> Try to connect to the database so the app can work properly! <--
