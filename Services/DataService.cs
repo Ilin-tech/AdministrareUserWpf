@@ -4,70 +4,69 @@ using User.Model;
 
 namespace User.Services
 {
-    // Clasa DataService gestionează operațiile cu baza de date pentru utilizatori
+    // The DataService class manages database operations for users
     public class DataService
     {
-        // String de conexiune la baza de date SQL Server
+        // Connection string to the SQL Server database
         private string connectionString = @"Data Source=ILIN-TECHASUS\ILINSQL;Initial Catalog=ADMIN_1;Integrated Security=True";
 
         public Users ValidateUser(string username, string password)
         {
-            // Deschide conexiunea cu baza de date
+            // Opens the connection to the database
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                // Interogare SQL pentru a verifica utilizatorul și parola
+                // SQL query to check the username and password
                 string query = "SELECT * FROM Users WHERE UsernAME = @username AND uSERpASS = @password";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Verificare dacă valorile sunt null sau goale pentru a evita erorile
+                    // Check if the values are null or empty to avoid errors
                     cmd.Parameters.AddWithValue("@username", string.IsNullOrEmpty(username) ? (object)DBNull.Value : username);
                     cmd.Parameters.AddWithValue("@password", string.IsNullOrEmpty(password) ? (object)DBNull.Value : password);
 
-                    // Execută interogarea și citește rezultatele
+                    // Executes the query and reads the results
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        // Verifică dacă există un rezultat valid
+                        // Check if a valid result exists
                         if (reader.Read())
                         {
-                            // Returnează un obiect Users cu datele citite
+                            // Returns a Users object with the read data
                             return new Users
                             {
-                                ID = reader.GetInt32(0),       // ID-ul utilizatorului
-                                UsernAME = reader.GetString(1), // Numele utilizatorului
-                                uSERpASS = reader.GetString(2), // Parola utilizatorului
-                                IsAdmin = reader.GetBoolean(3)  // Statutul de administrator
+                                ID = reader.GetInt32(0),        // User ID
+                                UsernAME = reader.GetString(1), // Username
+                                uSERpASS = reader.GetString(2), // User password
+                                IsAdmin = reader.GetBoolean(3)  // Admin status
                             };
                         }
-                        // Dacă nu există nicio potrivire, returnează null
+                        // If no match is found, return null
                         return null;
                     }
                 }
             }
         }
 
-
-        // Metodă pentru a obține toți utilizatorii din baza de date
+        // Method to retrieve all users from the database
         public ObservableCollection<Users> GetAllUsers()
         {
             var users = new ObservableCollection<Users>();
 
-            // Deschide conexiunea cu baza de date
+            // Opens the connection to the database
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                // Interogare SQL pentru a selecta toți utilizatorii
+                // SQL query to select all users
                 string query = "SELECT * FROM Users";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
-                // Execută interogarea și citește rezultatele
+                // Executes the query and reads the results
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        // Adaugă fiecare utilizator în lista observabilă
+                        // Adds each user to the observable collection
                         users.Add(new Users
                         {
                             ID = reader.GetInt32(0),
@@ -78,51 +77,51 @@ namespace User.Services
                     }
                 }
             }
-            // Returnează lista de utilizatori
+            // Returns the list of users
             return users;
         }
 
-        // Metodă pentru actualizarea unui utilizator existent
+        // Method to update an existing user
         public void UpdateUser(Users user)
         {
-            // Deschide conexiunea cu baza de date
+            // Opens the connection to the database
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                // Comandă SQL pentru actualizarea unui utilizator existent
+                // SQL command to update an existing user
                 string query = "UPDATE Users SET UsernAME = @username, uSERpASS = @password, IsAdmin = @isAdmin WHERE ID = @id";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
-                // Adăugare parametri pentru prevenirea SQL Injection
+                // Add parameters to prevent SQL Injection
                 cmd.Parameters.AddWithValue("@username", user.UsernAME);
                 cmd.Parameters.AddWithValue("@password", user.uSERpASS);
                 cmd.Parameters.AddWithValue("@isAdmin", user.IsAdmin);
                 cmd.Parameters.AddWithValue("@id", user.ID);
 
-                // Execută comanda de actualizare
+                // Executes the update command
                 cmd.ExecuteNonQuery();
             }
         }
 
-        // Metodă pentru adăugarea unui nou utilizator în baza de date
+        // Method to add a new user to the database
         public void AddUser(Users user)
         {
-            // Deschide conexiunea cu baza de date
+            // Opens the connection to the database
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                // Comandă SQL pentru adăugarea unui utilizator nou
+                // SQL command to insert a new user
                 string query = "INSERT INTO Users (UsernAME, uSERpASS, IsAdmin) VALUES (@username, @password, @isAdmin)";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
-                // Adăugare parametri pentru prevenirea SQL Injection
+                // Add parameters to prevent SQL Injection
                 cmd.Parameters.AddWithValue("@username", user.UsernAME);
                 cmd.Parameters.AddWithValue("@password", user.uSERpASS);
                 cmd.Parameters.AddWithValue("@isAdmin", user.IsAdmin);
 
-                // Execută comanda de inserare
+                // Executes the insert command
                 cmd.ExecuteNonQuery();
             }
         }
