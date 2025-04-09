@@ -9,27 +9,27 @@ using User.Services;
 
 namespace User.ViewModel
 {
-    // ViewModel pentru gestionarea utilizatorilor
+    // ViewModel for managing users
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly DataService _dataService;
         private Users _selectedUser;
 
-        // Colecție de utilizatori pentru listare în interfață
+        // Collection of users for listing in the UI
         public ObservableCollection<Users> Users { get; set; }
 
-        // Comenzi pentru salvare și adăugare de utilizatori
+        // Commands for saving and adding users
         public ICommand SaveCommand { get; }
         public ICommand AddCommand { get; }
 
-        // Utilizatorul selectat în prezent
+        // Currently selected user
         public Users SelectedUser
         {
             get => _selectedUser;
             set { _selectedUser = value; OnPropertyChanged(); }
         }
 
-        // Constructor pentru inițializarea serviciului de date și a comenzilor
+        // Constructor to initialize the data service and commands
         public MainViewModel()
         {
             _dataService = new DataService();
@@ -38,13 +38,13 @@ namespace User.ViewModel
             AddCommand = new RelayCommand(AddUser);
         }
 
-        // Verifică dacă utilizatorul selectat nu este nul înainte de a permite salvarea
+        // Checks if the selected user is not null before allowing save
         private bool CanSave()
         {
             return SelectedUser != null;
         }
 
-        // Metodă pentru salvarea modificărilor utilizatorului selectat
+        // Method for saving changes to the selected user
         private void Save()
         {
             if (SelectedUser != null)
@@ -62,7 +62,7 @@ namespace User.ViewModel
             }
         }
 
-        // Metodă pentru adăugarea unui utilizator nou în listă
+        // Method for adding a new user to the list
         private void AddUser()
         {
             try
@@ -79,7 +79,7 @@ namespace User.ViewModel
             }
         }
 
-        // Implementare pentru notificarea schimbării proprietăților
+        // Implementation for notifying property changes
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
